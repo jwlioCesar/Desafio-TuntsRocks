@@ -10,7 +10,7 @@ Este é um script Python que integra a API do Google Sheets para inserir, visual
 ```bash
 git clone https://github.com/jwlioCesar/Desafio-TuntsRocks.git
 ```
-2. importar bibliotecas
+2. importar bibliotecas (Se já não as tiver importadas)
 ```bash
 pip install pandas gspread oauth2client
 pip install openpyxl
