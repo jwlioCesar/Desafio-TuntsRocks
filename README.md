@@ -1,2 +1,19 @@
-# Desafio-TuntsRocks
-Aplicação capaz de ler uma planilha do google sheets, buscar as informações necessárias, calcular e escrever o  resultado na planilha. 
+# Teste Engenharia de Software Tunts Rocks
+![logoTuntsRocksHeader c8146752](https://github.com/gabrielandre-math/TesteEngenhariaSoftwareTuntsRocks/assets/60861872/bdd7128b-0e62-4a71-a783-13c4c8f6e11e)
+
+## Google Sheets API Integration
+
+Este é um script Python que integra a API do Google Sheets para inserir, visualizar e editar dados em uma planilha Google Sheets.
+
+## Instruções para execução do script
+1. clonar o projeto
+```bash
+git clone 
+```
+
+Certifique-se de ter as credenciais de API no arquivo `credentials.json` e as bibliotecas necessárias instaladas. Execute o script para interagir com a planilha.
+
+## Link da planilha preenchida
+https://docs.google.com/spreadsheets/d/1dNhlz1hW2G0hwOur6MJNskkaLsKc9ai6g4qpG0fCy0A/edit?usp=sharing
+
+**Criado por:** Gabriel André
