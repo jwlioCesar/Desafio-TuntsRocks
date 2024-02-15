@@ -8,12 +8,22 @@ Este é um script Python que integra a API do Google Sheets para inserir, visual
 ## Instruções para execução do script
 1. clonar o projeto
 ```bash
-git clone 
+git clone https://github.com/jwlioCesar/Desafio-TuntsRocks.git
+```
+2. importar bibliotecas
+```bash
+pip install pandas gspread oauth2client
+pip install openpyxl
+pip install pyarrow
+
+```
+3. Rodar o código
+```bash
+
 ```
 
-Certifique-se de ter as credenciais de API no arquivo `credentials.json` e as bibliotecas necessárias instaladas. Execute o script para interagir com a planilha.
 
 ## Link da planilha preenchida
 https://docs.google.com/spreadsheets/d/1dNhlz1hW2G0hwOur6MJNskkaLsKc9ai6g4qpG0fCy0A/edit?usp=sharing
 
-**Criado por:** Gabriel André
+**Criado por:** Júlio César
