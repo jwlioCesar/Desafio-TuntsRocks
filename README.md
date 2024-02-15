@@ -17,9 +17,9 @@ pip install openpyxl
 pip install pyarrow
 
 ```
-3. Rodar o código
+3. Executar o código
 ```bash
-
+python Desafio-TuntsRocks.py
 ```
 
 
