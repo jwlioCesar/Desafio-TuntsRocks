@@ -1,42 +1,52 @@
+import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-# Configurando a autenticação para acessar a planilha
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
-gc = gspread.authorize(credentials)
+class GoogleSheetsUpdater:
+    def __init__(self, credentials_file, spreadsheet_key, worksheet_index=0):
+        self.credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials_file, ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
+        self.client = gspread.authorize(self.credentials)
+        self.spreadsheet = self.client.open_by_key(spreadsheet_key)
+        self.worksheet = self.spreadsheet.get_worksheet(worksheet_index)
 
-# Abrindo a planilha
-spreadsheet_url = 'SUA_URL_DA_PLANILHA_COPIADA'
-sh = gc.open_by_url(spreadsheet_url)
+    def update_data(self, data, start_cell='A4'):
+        self.worksheet.update(start_cell, data)
 
-# Selecionando a folha de dados
-worksheet = sh.get_worksheet(0)
+class GradeCalculator:
+    def __init__(self, dataframe):
+        self.df = dataframe
 
-# Obter dados da planilha
-data = worksheet.get_all_records()
+    def calculate_grades(self, row):
+        media = (row['P1'] + row['P2'] + row['P3']) / 3
+        misses = row['Faltas']
+        total_classes = 60  
 
-# Função para calcular a situação dos alunos
-def calcular_situacao(aluno):
-    media = (aluno['P1'] + aluno['P2'] + aluno['P3']) / 3
-    faltas = aluno['Faltas']
-    
-    if faltas > 0.25 * aluno['Aulas']:
-        return 'Reprovado por Falta'
-    elif media < 5:
-        return 'Reprovado por Nota'
-    elif 5 <= media < 7:
-        naf = max(0, 2 * (7 - media))
-        naf = int(round(naf))
-        worksheet.update_cell(aluno['Número'], 6, naf)
-        return 'Exame Final'
-    else:
-        worksheet.update_cell(aluno['Número'], 6, 0)
-        return 'Aprovado'
+        if misses > 0.25 * total_classes:
+            return "Reprovado por Falta", 0
+        elif media < 50:
+            return "Reprovado por Nota", 0
+        elif 50 <= media < 70:
+            naf = max(0, (100 - media))
+            return "Exame Final", int(round(naf))
+        else:
+            return "Aprovado", 0
 
-# Atualizar a situação na planilha
-for aluno in data:
-    situacao = calcular_situacao(aluno)
-    worksheet.update_cell(aluno['Número'], 5, situacao)
+    def apply_grades(self):
+        self.df[['Situação', 'Nota para Aprovação Final']] = self.df.apply(self.calculate_grades, axis=1, result_type='expand')
+        return self.df.values.tolist()
 
-print("Processo concluído. Verifique a planilha para os resultados.")
+def main():
+    credentials_file = "credentials.json"
+    spreadsheet_key = "1dNhlz1hW2G0hwOur6MJNskkaLsKc9ai6g4qpG0fCy0A"
+    excel_file_path = "Engenharia de Software - Julio Cesar Francisco da Silva.xlsx"
+
+    gs_updater = GoogleSheetsUpdater(credentials_file, spreadsheet_key)
+    df = pd.read_excel(excel_file_path, skiprows=2).fillna(0)
+
+    grades_calculator = GradeCalculator(df)
+    update_data = grades_calculator.apply_grades()
+
+    gs_updater.update_data(update_data)
+
+if __name__ == "__main__":
+    main()
